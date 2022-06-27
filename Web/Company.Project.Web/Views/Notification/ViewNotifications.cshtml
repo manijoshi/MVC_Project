@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Company.Project.ProductDomain.Domain.Notification>
+@{
+    ViewData["Title"] = "ViewNotifications";
+}<h1>ViewNotifications</h1>
+@if (Model.Count() > 0)
+{
+    <div class="">
+        <table class="table table-bordered table-striped" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Notifications</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var notification in Model)
+                {
+                    <tr>
+                        <td width="70%">
+                            <a href='@Url.Action("Comments", "Comment", new { Id = notification.EventId }).ToString()'>
+                                @notification.Sender posted comment on @notification.EventTitle on @notification.Date.ToShortDateString()
+                            </a>
+                            
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div>
+        <h3>No notifications</h3>
+    </div>
+}
+

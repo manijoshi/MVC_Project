@@ -1,0 +1,103 @@
+﻿@using System.Web;
+@model Company.Project.Web.Models.EventViewModel
+
+<div class="row justify-content-center m-5">
+    <div class="col-sm-8">
+        <div class="card h-100">
+            <div class="display-4 card-header text-center" style="color: rgb(63,214,172); font-weight: 500 ">@Model.Title</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-4">Created by</div>
+                    <div class="col-8"><h4>@Model.UserId</h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Date</div>
+                    <div class="col-8"><h4>@Model.Date.ToString(string.Format("dd/MM/yyyy"))</h4></div>
+                </div>
+                <div class="row">
+                    <div class="col-4">Start Time</div>
+                    <div class="col-8"><h4>@Model.StartTime.TimeOfDay</h4></div>
+                </div>
+                @if (Model.Description != null)
+                {
+                    <div class="row">
+                        <div class="col-4">Description</div>
+                        <div class="col-8"><h4>@Model.Description</h4></div>
+                    </div>
+                }
+
+                @if (Model.Duration != 0)
+                {
+                    <div class="row">
+                        <div class="col-4">Duration in hours</div>
+                        <div class="col-8"><h4>@Model.Duration</h4></div>
+                    </div>
+                }
+                @if (Model.OtherDetails != null)
+                {
+                    <div class="row">
+                        <div class="col-4">OtherDetails</div>
+                        <div class="col-8"><h4>@Model.OtherDetails</h4></div>
+                    </div>
+                }
+                @if (Model.InviteByEmail != null)
+                {
+                    <div class="row">
+                        <div class="col-4">Total Invitees</div>
+                        <div class="col-8"><h4>@Model.InviteByEmail.Split(",").Count()</h4></div>
+
+                    </div>
+                }
+                <div class="row">
+                    <div class="col-4">Comments</div>
+                    <a asp-controller="Comment" asp-action="Comments" asp-route-Id="@Model.Id" class="col-8">Load Commments...</a>
+
+                </div>
+            </div>
+            <div class="card-footer text-center">
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg">Back</a>
+                }
+                @if (User.Identity.IsAuthenticated && User.Identity.Name == "myadmin@bookevents.com")
+                {
+                    <a asp-controller="Event" asp-action="AllEvents" class="btn btn-primary">Back</a>
+                    <a asp-controller="Event" asp-action="EditEvent" asp-route-Id="@Model.Id" class="btn btn-warning">Edit</a>
+                }
+
+                @if (User.Identity.IsAuthenticated && !(User.Identity.Name == "myadmin@bookevents.com"))
+                {
+                    <a asp-controller="Event" asp-action="Details" class="btn btn-primary">Back</a>
+                    <a asp-controller="Event" asp-action="EditEvent" asp-route-Id="@Model.Id" class="btn btn-warning">Edit</a>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="container">
+        <form enctype="multipart/form-data" asp-controller="Comment" asp-action="AddComments" method="post" asp-route-eventId ="@Model.Id" class="mt-3">
+            <div class="form-horizontal">
+                <h4>Post Comment</h4>
+                <hr />
+                <input asp-for="Id" hidden />
+                <small><span asp-validation-for="CommentAdded" class="text-danger"></span></small>
+
+                <div class="form-group">
+                    <label asp-for="CommentAdded" class="control-label col-md-2"></label>
+                    <div class="col-md-10">
+                        <input asp-for="CommentAdded" class="form-control" placeholder="Write here..." />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Post" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+}

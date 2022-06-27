@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Company.Project.Web.Models.EventViewModel>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager;
+@inject UserManager<IdentityUser> userManager;
+@{
+    ViewData["Title"] = "EventsInvitedTo";
+}
+
+<div style="color: rgb(63,214,172); font-weight: 500 ">
+
+    @if (User.IsInRole("Administrator"))
+    {
+        <a asp-controller="Event" asp-action="AllEvents" class="btn btn-info float-right mt-2">Back to Events</a>
+    }
+    else
+    {
+        <a asp-controller="Event" asp-action="Details" class="btn btn-info float-right mt-2">Back to Events</a>
+    }
+    <p class="display-4 mt-4" style="color: rgb(63,214,172); font-weight: 500 ">All Invitations</p>
+</div>
+
+<div class="container mt-4">
+    @if (Model.Count()==0) 
+    {
+        <h3 class="p-3 text-white" style="background-color:khaki">No Information</h3>
+    }
+    @foreach (var evt in Model)
+    {
+        <ul style="list-style-type:circle;width: 100%; text-decoration: underline; font-size: 24px;margin-left:15px">
+            <li><a asp-controller="Event" asp-action="EventDetails" asp-route-Id="@evt.Id">@evt.Title</a></li>
+        </ul>
+
+    }
+
+</div>
+

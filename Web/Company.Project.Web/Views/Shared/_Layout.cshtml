@@ -1,0 +1,112 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager;
+@inject UserManager<IdentityUser> userManager;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Company.Project.Web</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Event" asp-action="Index">Company.Project.Web</a>
+
+                <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            if (User.IsInRole("Administrator"))
+                            {
+                                <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "AllEvents" ? "active" : "") nav-item">
+                                    @Html.ActionLink("Home", "AllEvents", "Event", null, new { @class = "nav-link" })
+                                </li>
+
+                                <li class="nav-item">
+                                    <a class="nav-link" href="http://helpdesk.nagarro.com/" target="_blank">Customer-Support</a>
+                                </li>
+                                <li class="nav-item" style="position:relative;float:right">
+                                    <form method="post" asp-controller="account" asp-action="logout">
+                                        <button type="submit" class="nav-link btn btn-link btn-danger p-1" style="color:white;margin-top:2px">
+                                            Logout @User.Identity.Name
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                        }
+
+                        @if (User.Identity.IsAuthenticated && !(User.IsInRole("Administrator")))
+                        {
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Details" ? "active" : "") nav-item">
+                                @Html.ActionLink("MyEvents", "Details", "Event", null, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "EventsInvitedTo" ? "active" : "") nav-item">
+                                @Html.ActionLink("EventsInvitedTo", "EventsInvitedTo", "Event", null, new { @class = "nav-link" })
+                            </li>
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "CreateEvent" ? "active" : "") nav-item">
+                                @Html.ActionLink("CreateEvent", "CreateEvent", "Event", null, new { @class = "nav-link" })
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Notification" asp-action="ViewNotifications">Notifications</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="http://helpdesk.nagarro.com/" target="_blank">Customer-Support</a>
+                            </li>
+                            <li class="nav-item" style="position:relative;float:right">
+                                <form method="post" asp-controller="account" asp-action="logout">
+                                    <button type="submit" class="nav-link btn btn-link btn-danger p-1" style="color:white;margin-top:2px">
+                                        Logout @User.Identity.Name
+                                    </button>
+                                </form>
+                            </li>
+                        }
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "") nav-item">
+                                @Html.ActionLink("Home", "Index", "Event", null, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Register" ? "active" : "") nav-item">
+                                @Html.ActionLink("Register", "Register", "Account", null, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="@(ViewContext.RouteData.Values["Action"].ToString() == "Login" ? "active" : "") nav-item">
+                                @Html.ActionLink("Login", "Login", "Account", null, new { @class = "nav-link" })
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="http://helpdesk.nagarro.com/" target="_blank">Customer-Support</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Company.Project.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

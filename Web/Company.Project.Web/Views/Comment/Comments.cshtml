@@ -1,0 +1,40 @@
+﻿@model IEnumerable<Company.Project.ProductDomain.Domain.Comments>
+<div style="color: rgb(63,214,172); font-weight: 500">
+    @if (User.IsInRole("Administrator"))
+    {
+        <a asp-controller="Event" asp-action="AllEvents" class="btn btn-info float-right mt-2">Back to Events</a>
+    }
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Event" asp-action="Index" class="btn btn-info float-right mt-2">Back to Events</a>
+    }
+    @if (User.IsInRole("User"))
+    {
+        <a asp-controller="Event" asp-action="Details" class="btn btn-info float-right mt-2">Back to Events</a>
+    }
+</div>
+<div class="container mt-4">
+    @if (Model.Count() == 0)
+    {
+        <h3 class="p-3 text-white" style="background-color:khaki">No Comments here..</h3>
+    }
+
+    else
+    {
+        <ul style="list-style-type:none">
+            @foreach (var item in Model)
+            {
+                <li class="p-2 rounded-lg" style="background-color: #e8edee">
+                    <div class="ml-3">
+                        @item.UserId
+                        <small>@item.Date.ToString(string.Format("dd/MM/yyyy"))</small>
+                    </div>
+                    <p style="width: 100%; background-color:azure;width:fit-content" class="p-2 ml-3">@item.CommentAdded</p>
+                </li>
+                <br />
+
+            }
+
+        </ul>
+    }
+</div>
